@@ -27,7 +27,8 @@ var client *smtp.Client
 var account string
 var password string
 var emailChan chan string
-var verifyCodeChan chan string
+var ContentChan chan string
+var SubJectChan chan string
 //-------------------------------------------------------
 
 type Config struct {

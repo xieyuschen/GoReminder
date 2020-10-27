@@ -19,7 +19,7 @@ func parseTemplate(fileName string, data interface{}) error {
 
 	return nil
 }
-func SendEmail(toEmail string,verifycode string){
+func SendEmail(toEmail string,subject string,content string){
 	from := mail.Address{"HoleTeam", account}
 	to   := mail.Address{"DearUser", toEmail}
 	var err error
@@ -31,25 +31,11 @@ func SendEmail(toEmail string,verifycode string){
 		log.Panic(err)
 	}
 
-	subj := "HustHole注册"
-
-	content := "欢迎来到华科树洞，你的验证码为："+verifycode+" 验证码有效期20分钟，如果不是您本人注册，请忽略此信息"
-
-
 
 
 	//===================================
 	//Send a email template
-	t, err := template.ParseFiles("1.html")
-	if err != nil {
-		log.Panic(err)
-	}
-	buffer := new(bytes.Buffer)
-	var data interface{}
-	if err = t.Execute(buffer, data); err != nil {
-		log.Panic(err)
-	}
-	content = buffer.String()
+
 
 	//------------------------------------
 	body := content
@@ -57,15 +43,15 @@ func SendEmail(toEmail string,verifycode string){
 	headers := make(map[string]string)
 	headers["From"] = from.String()
 	headers["To"] = to.String()
-	headers["Subject"] = subj
+	headers["Subject"] = subject
 
 	// Setup message
 	message := ""
 	for k,v := range headers {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
-	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n";
-	message += mime + body
+
+	message += body
 
 	// Data
 
@@ -85,24 +71,30 @@ func SendEmail(toEmail string,verifycode string){
 	//client.Quit()
 }
 
-func AddEmailVerifyCodeToChennel(toEmail string,verifycode string){
+func AddEmailVerifyCodeToChennel(toEmail string, suject string,content string){
 	emailChan<-toEmail
-	verifyCodeChan<-verifycode
+	ContentChan <- suject
+	SubJectChan <- content
 }
 
 func HandleMultipleEmail(){
 	channelSize := 100
 	emailChan = make(chan string,channelSize)
-	verifyCodeChan = make(chan string,channelSize)
+	ContentChan = make(chan string,channelSize)
+	SubJectChan = make(chan string,channelSize)
 	var email string
-	var code string
+	var content string
+	var sub string
 	for {
 		select {
 		 	case email = <-emailChan:
 		}
 		select {
-			case code = <-verifyCodeChan:
+			case content = <-ContentChan:
 		}
-		SendEmail(email,code)
+		select {
+			case sub=<-SubJectChan:
+		}
+		SendEmail(email, sub,content)
 	}
 }
