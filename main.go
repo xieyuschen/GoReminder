@@ -5,6 +5,7 @@ import (
 )
 
 func main(){
-	str := "https://studygolang.com/articles/9194"
-	WebScanner.GetPage(str)
+	str := "http://www.biquge.se/23609/"
+	body:=WebScanner.GetPage(str)
+	WebScanner.HtmlParse(body)
 }
