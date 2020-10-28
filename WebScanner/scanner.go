@@ -20,7 +20,7 @@ func GetPage(url string) (pageContent string){
 	defer  resp.Body.Close()
 	return string(body)
 }
-func HtmlParse(str string){
+func HtmlParse(str string) {
 	doc,err := html.Parse(strings.NewReader(str))
 	if err!=nil{
 		log.Panic(err)

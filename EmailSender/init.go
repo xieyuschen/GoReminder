@@ -1,12 +1,10 @@
 package services
 
 import (
-
+	"GoReminder/models"
 	"crypto/tls"
-	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,7 +14,6 @@ import (
 )
 //#######################################################
 //--------------database services---------------------------
-var db *gorm.DB
 
 //-------------------------------------------------------
 
@@ -31,41 +28,15 @@ var ContentChan chan string
 var SubJectChan chan string
 //-------------------------------------------------------
 
-type Config struct {
-	DbSettings DbSettings `json:"DbSettings"`
-	EmailSenderSettings EmailSenderSettings `json:"EmailSenderSettings"`
-}
-type DbSettings struct{
-	Username string `json:"Username"`
-	Password string	`json:"Password"`
-	Hostname string `json:"Hostname"`
-	Dbname   string `json:"Dbname"`
-}
-
 //Case Sensitive! Need a uppercase suffix
-type EmailSenderSettings struct {
-	Email string `json:"email"`
-	Password string `json:"password"`
-}
+
 
 func init(){
-	databaseInit()
+
 	emailInit()
 }
-func databaseInit(){
-	settings := DbSettings{Username: "root", Password: "root", Hostname: "127.0.0.1:3306", Dbname: "husthole"}
-	//"root:@tcp(127.0.0.1:3306)/?parseTime=true&charset=utf8"
-	connStr := dsn(settings)
-	msdb, _ := sql.Open("mysql",connStr)
 
-	msdb.Exec("create database if not exists "+settings.Dbname +" character set utf8")
-	msdb.Close()
-
-	db, _ = gorm.Open("mysql",dsn(settings))
-	//db.DB().SetMaxIdleConns(0)
-
-}
-func ReadSettingsFromFile(settingFilePath string) (config Config){
+func ReadSettingsFromFile(settingFilePath string) (config models.Config){
 	jsonFile, err := os.Open(settingFilePath)
 	if err != nil {
 		fmt.Println(err)
@@ -120,8 +91,4 @@ func emailInit(){
 	go HandleMultipleEmail()
 
 }
-func dsn(settings DbSettings) string {
-	// https://stackoverflow.com/questions/45040319/unsupported-scan-storing-driver-value-type-uint8-into-type-time-time
-	// Add ?parseTime=true
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8", settings.Username,settings.Password, settings.Hostname,settings.Dbname)
-}
+
