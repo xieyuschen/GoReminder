@@ -5,3 +5,8 @@ type DbSettings struct{
 	Hostname string `json:"Hostname"`
 	Dbname   string `json:"Dbname"`
 }
+type NovelInfo struct {
+	Url string
+	LastChapter int
+	IsInit bool
+}
