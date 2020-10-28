@@ -1,6 +1,7 @@
 package WebScanner
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -30,12 +31,18 @@ func HtmlParse(str string){
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "a" {
+			fmt.Println()
 			for _, a := range n.Attr {
-				if a.Key == "href" {
+				if a.Key=="href" {
 					fmt.Println(a.Val)
 					break
 				}
 			}
+			//With the help of `https://stackoverflow.com/questions/18274501/how-can-i-get-the-content-of-an-html-node`
+			//Powerful Internet Explorer!
+			text := &bytes.Buffer{}
+			collectText(n, text)
+			fmt.Println(text)
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)
@@ -46,7 +53,14 @@ func HtmlParse(str string){
 func GetNewestChapter(url string, lists chan map[string]int){
 
 }
-
+func collectText(n *html.Node, buf *bytes.Buffer) {
+	if n.Type == html.TextNode {
+		buf.WriteString(n.Data)
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		collectText(c, buf)
+	}
+}
 
 //========================================
 func GetAttribute(n *html.Node, key string) (string, bool) {
