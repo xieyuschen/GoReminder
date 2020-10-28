@@ -1,12 +1,13 @@
 package WebScanner
 
 import (
+	"GoReminder/models"
 	"bytes"
 	"fmt"
+	"golang.org/x/net/html"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"golang.org/x/net/html"
 	"strings"
 )
 
@@ -20,7 +21,8 @@ func GetPage(url string) (pageContent string){
 	defer  resp.Body.Close()
 	return string(body)
 }
-func HtmlParse(str string) {
+func HtmlParse(str string) (lists map[string]models.Article) {
+	lists =make(map[string]models.Article)
 	doc,err := html.Parse(strings.NewReader(str))
 	if err!=nil{
 		log.Panic(err)
@@ -30,11 +32,11 @@ func HtmlParse(str string) {
 
 	var f func(*html.Node)
 	f = func(n *html.Node) {
+		var key string
 		if n.Type == html.ElementNode && n.Data == "a" {
-			fmt.Println()
 			for _, a := range n.Attr {
 				if a.Key=="href" {
-					fmt.Println(a.Val)
+					key = a.Val
 					break
 				}
 			}
@@ -42,13 +44,17 @@ func HtmlParse(str string) {
 			//Powerful Internet Explorer!
 			text := &bytes.Buffer{}
 			collectText(n, text)
-			fmt.Println(text)
+
+			chapter,name:=splitNameAndChapter(fmt.Sprintf("%s",text))
+			lists[key]=models.Article{Chapter: chapter,Name: name}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)
 		}
 	}
 	f(r1)
+
+	return lists
 }
 func GetNewestChapter(url string, lists chan map[string]int){
 

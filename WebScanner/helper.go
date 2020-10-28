@@ -3,6 +3,8 @@ package WebScanner
 import (
 	"bytes"
 	"golang.org/x/net/html"
+	"strconv"
+	"strings"
 )
 
 func collectText(n *html.Node, buf *bytes.Buffer) {
@@ -51,4 +53,21 @@ func traverse(n *html.Node, id string) *html.Node {
 
 func getElementById(n *html.Node, id string) *html.Node {
 	return traverse(n, id)
+}
+
+func splitNameAndChapter(combineStr string) (num int,name string){
+
+	re := strings.Split(combineStr,"、")
+	if len(re)!=2{
+		num=-1
+		name="no chapter info"
+		return
+	}else {
+		num,err:=strconv.Atoi(re[0])
+		if err!=nil{
+			num=0
+		}
+		return num,re[1]
+	}
+
 }
