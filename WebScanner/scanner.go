@@ -15,3 +15,9 @@ func GetPage(url string) (pageContent string){
 
 	return string(body)
 }
+func HtmlParse(){
+
+}
+func GetNewestChapter(url string, lists chan map[string]int){
+
+}
