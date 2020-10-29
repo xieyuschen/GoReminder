@@ -1,4 +1,4 @@
-package services
+package EmailSender
 
 import (
 	"bytes"
@@ -71,11 +71,6 @@ func SendEmail(toEmail string,subject string,content string){
 	//client.Quit()
 }
 
-func AddEmailVerifyCodeToChennel(toEmail string, suject string,content string){
-	emailChan<-toEmail
-	ContentChan <- suject
-	SubJectChan <- content
-}
 
 func HandleMultipleEmail(){
 	channelSize := 100

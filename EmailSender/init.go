@@ -1,4 +1,4 @@
-package services
+package EmailSender
 
 import (
 	"GoReminder/models"
@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
 
-	"net"
 	"net/smtp"
 )
 //#######################################################
@@ -32,24 +32,6 @@ var SubJectChan chan string
 
 
 func init(){
-
-	emailInit()
-}
-
-func ReadSettingsFromFile(settingFilePath string) (config models.Config){
-	jsonFile, err := os.Open(settingFilePath)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer jsonFile.Close()
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-	err = json.Unmarshal(byteValue, &config)
-	if err != nil {
-		log.Panic(err)
-	}
-	return config
-}
-func emailInit(){
 
 	conf := ReadSettingsFromFile("Config.json")
 	account =conf.EmailSenderSettings.Email
@@ -91,4 +73,19 @@ func emailInit(){
 	go HandleMultipleEmail()
 
 }
+
+func ReadSettingsFromFile(settingFilePath string) (config models.Config){
+	jsonFile, err := os.Open(settingFilePath)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer jsonFile.Close()
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	err = json.Unmarshal(byteValue, &config)
+	if err != nil {
+		log.Panic(err)
+	}
+	return config
+}
+
 

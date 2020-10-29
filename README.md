@@ -44,7 +44,7 @@ Next loop         |                   |
 |                 |
 +-----------------|   
 ```
-
+需要考虑的是Go routine的阻塞问题，直接使用一个`Unbuffered channel`即可。
 
 
 
