@@ -10,17 +10,16 @@ import (
 )
 var db *gorm.DB
 func init(){
-	settings := models.DbSettings{Username: "root", Password: "root", Hostname: "127.0.0.1:3306", Dbname: "goreminder"}
 	//"root:@tcp(127.0.0.1:3306)/?parseTime=true&charset=utf8"
-	connStr := dsn(settings)
+	connStr := dsn(DbSetting)
 	msdb, err := sql.Open("mysql",connStr)
 	if err!=nil{
 		log.Panic(err)
 	}
-	msdb.Exec("create database if not exists "+settings.Dbname +" character set utf8")
+	msdb.Exec("create database if not exists "+DbSetting.Dbname +" character set utf8")
 	msdb.Close()
 
-	db, _ = gorm.Open("mysql",dsn(settings))
+	db, _ = gorm.Open("mysql",dsn(DbSetting))
 	var novelInfo models.NovelInfo
 	if !db.HasTable(&novelInfo){
 		db.CreateTable(&novelInfo)
