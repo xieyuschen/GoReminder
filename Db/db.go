@@ -7,8 +7,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 var db *gorm.DB
-
-func databaseInit(){
+var novelInfo models.NovelInfo
+func init(){
 	settings := models.DbSettings{Username: "root", Password: "root", Hostname: "127.0.0.1:3306", Dbname: "husthole"}
 	//"root:@tcp(127.0.0.1:3306)/?parseTime=true&charset=utf8"
 	connStr := dsn(settings)
@@ -18,8 +18,18 @@ func databaseInit(){
 	msdb.Close()
 
 	db, _ = gorm.Open("mysql",dsn(settings))
-	//db.DB().SetMaxIdleConns(0)
-
+	if !db.HasTable(&novelInfo){
+		db.CreateTable(&novelInfo)
+	}
+}
+func GetLastChapterAndIsInit(url string)(LastChapter int,IsInit bool){
+	var info models.NovelInfo
+	db.Select("url=?",url).Find(&info)
+	if &info!=nil{
+		return info.LastChapter,info.IsInit
+	}else {
+		return 0,false
+	}
 }
 func dsn(settings models.DbSettings) string {
 	// https://stackoverflow.com/questions/45040319/unsupported-scan-storing-driver-value-type-uint8-into-type-time-time

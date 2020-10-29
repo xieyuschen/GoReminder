@@ -56,7 +56,12 @@ func HtmlParse(str string) (lists map[string]models.Article) {
 
 	return lists
 }
-func GetNewestChapter(url string, lists chan map[string]int){
-
+func GetNewestChapter(url string, lists map[string]models.Article) (u string,lastchapter int){
+	for _,value:=range lists{
+		if value.Chapter>lastchapter{
+			lastchapter=value.Chapter
+		}
+	}
+	return url,lastchapter
 }
 

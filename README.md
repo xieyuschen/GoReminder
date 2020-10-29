@@ -23,3 +23,46 @@
 Web爬虫即正常的使用`Html parser`解析对应的html界面，然后获取到对应内容即可。  
 - 多本小说  
 多本小说即需要保存对应的`url`链接作为map的key，然后扫描的时候获取的`章节:内容`信息存入到map中去，然后供邮件进行使用。
+
+## Reminder组件
+Reminder组件的设计较为复杂，这里简单的写一下。需要完成的功能模块：  
+- 持续扫描小说是否更新  
+扫描毫无疑问应该在`main goroutine`上进行，他完成对整个程序逻辑的组装，将不同组件组装在一起。
+```
+Start
+|
++-->check whether the subsribed novel is updated
+^   {+-->Send a get request and get novelInfo
+|    +-->Query last-sending email in database
+|    +-->Whether db chapter is newest?+--yes-->Continue this scan loop   
+|                                     |
+|                 |Block until       no happened
+Next loop         |                   |  
+|                 +-->Get new chapter's content   
+|                 |
+|                 +-->Send Email to Subsriber,update db
+|                 |
++-----------------|   
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
