@@ -14,6 +14,7 @@ func Reminder(url string){
 	//ch的内容由Scanner获取
 	ch :=make(chan  map[int]models.Article,channelSize)
 	lists := make(map[int]models.Article)
+
 	for j:=0;j<1;j++{
 		go WebScanner.ArticleUrlAndSubject(url,ch)
 		//Block for get
@@ -24,7 +25,6 @@ func Reminder(url string){
 		_,lastchapter:=WebScanner.GetNewestChapter(url,lists)
 
 		//Just for testing:)
-		db_chapter=901
 
 		if db_chapter<lastchapter{
 			for i:=db_chapter+1;i<=lastchapter;i++{

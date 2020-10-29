@@ -26,7 +26,6 @@ func SendEmail(toEmail string,subject string,content string){
 	if err = client.Mail(from.Address); err != nil {
 		log.Panic(err)
 	}
-
 	if err = client.Rcpt(to.Address); err != nil {
 		log.Panic(err)
 	}

@@ -35,8 +35,14 @@ func GetLastChapterAndIsInit(url string)(LastChapter int,IsInit bool){
 		return 0,false
 	}
 }
+func InsertArticle(info models.NovelInfo){
+	db.Create(&info)
+}
 func dsn(settings models.DbSettings) string {
 	// https://stackoverflow.com/questions/45040319/unsupported-scan-storing-driver-value-type-uint8-into-type-time-time
 	// Add ?parseTime=true
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8", settings.Username,settings.Password, settings.Hostname,settings.Dbname)
+}
+func UpdateLastestChapter(url string){
+	
 }
