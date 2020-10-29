@@ -44,8 +44,8 @@ func SendEmail(toEmail string,subject string,content string){
 	for k,v := range headers {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
-
-	message += body
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n";
+	message += mime+body
 
 	// Data
 
