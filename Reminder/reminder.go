@@ -30,7 +30,7 @@ func Reminder(url string){
 			for i:=db_chapter+1;i<=lastchapter;i++{
 				println(host+lists[i].Url)
 				Content:=WebScanner.GetContentAndSubject(host+lists[i].Url)
-				EmailSender.SendEmail("1743432766@qq.com","test",Content)
+				EmailSender.SendEmail("1743432766@qq.com",lists[i].Name,Content)
 			}
 		}else {
 			fmt.Println("Helloworld")

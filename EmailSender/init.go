@@ -36,7 +36,7 @@ func init(){
 	account =conf.EmailSenderSettings.Email
 	password = conf.EmailSenderSettings.Password
 	// Connect to the SMTP Server
-	servername := "smtp.163.com:465"
+	servername := "smtp.qq.com:465"
 
 	host, _, _ := net.SplitHostPort(servername)
 
