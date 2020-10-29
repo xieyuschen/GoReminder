@@ -7,6 +7,16 @@
 - *具有生成整本小说的功能  
 属于随后的扩展功能，用于拓展适用范围。  
 
+# Quickly Start
+- 需要拥有mysql服务，请保证数据库是打开状态
+- 安装Go环境
+- 服务器CentOs环境下
+## 配置并使用
+0. `git clone https://github.com/Xieyuschen/GoReminder.git`获取该仓库 
+1. 进入该仓库，在`Config.json`中配置数据库连接信息与发送邮件的SMTP账号与密码
+2. `nohup go run main.go&`，将该程序在后台执行
+[注]哦忘了告诉你，因为有些疲惫，所以说没有在配置文件中设置要爬取那本小说和发送给谁。如果想要把邮件发送给你自己，请去`/Reminder/reminder.go:43`把邮件地址改为自己的收件地址。
+暂时只能爬取[我真没想重生啊](http://www.biquge.se/23609/)嗷:)
 # 整体设计
 代码结构分为以下若干块：  
 - Web爬虫  
