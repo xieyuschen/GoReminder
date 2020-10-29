@@ -20,7 +20,7 @@ func parseTemplate(fileName string, data interface{}) error {
 	return nil
 }
 func SendEmail(toEmail string,subject string,content string){
-	from := mail.Address{"HoleTeam", account}
+	from := mail.Address{"GoReminder", account}
 	to   := mail.Address{"DearUser", toEmail}
 	var err error
 	if err = client.Mail(from.Address); err != nil {

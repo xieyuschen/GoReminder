@@ -28,12 +28,8 @@ func init(){
 }
 func GetLastChapterAndIsInit(url string)(LastChapter int,IsInit bool){
 	var info models.NovelInfo
-	db.Select("url=?",url).Find(&info)
-	if &info!=nil{
-		return info.LastChapter,info.IsInit
-	}else {
-		return 0,false
-	}
+	db.Where("url=?",url).Find(&info)
+	return info.LastChapter,info.IsInit
 }
 func InsertArticle(info models.NovelInfo){
 	db.Create(&info)
@@ -43,9 +39,10 @@ func dsn(settings models.DbSettings) string {
 	// Add ?parseTime=true
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8", settings.Username,settings.Password, settings.Hostname,settings.Dbname)
 }
-func UpdateLastestChapter(url string){
+func UpdateLastestChapter(url string,lastestChapter int){
 	var info models.NovelInfo
 	db.Where("url=?",url).Find(&info)
-	info.LastChapter++
+	info.LastChapter=lastestChapter
 	db.Save(&info)
+	return
 }

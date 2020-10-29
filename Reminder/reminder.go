@@ -5,6 +5,7 @@ import (
 	"GoReminder/EmailSender"
 	"GoReminder/WebScanner"
 	"GoReminder/models"
+	"fmt"
 	"time"
 )
 
@@ -16,25 +17,28 @@ func Reminder(url string){
 	lists := make(map[int]models.Article)
 
 	for {
-		go WebScanner.ArticleUrlAndSubject(url,ch)
+		go WebScanner.ArticleUrlAndSubject(url, ch)
 		//Block for get
-		select{
-			case lists = <-ch:
+		select {
+		case lists = <-ch:
 		}
-		db_chapter,_:=Db.GetLastChapterAndIsInit(url)
-		_,lastchapter:=WebScanner.GetNewestChapter(url,lists)
 
+		_, lastchapter := WebScanner.GetNewestChapter(url, lists)
+		fmt.Println(lastchapter)
+		info := models.NovelInfo{Url: url, LastChapter: lastchapter - 1, IsInit: true}
+		Db.InsertArticle(info)
 
+		if db_chapter, _ := Db.GetLastChapterAndIsInit(url); db_chapter < lastchapter {
+			for i := db_chapter + 1; i <= lastchapter; i++ {
+				Db.UpdateLastestChapter(url, i)
+				fmt.Println("Restart service and Send the newest chapter to you:)")
+				Content := WebScanner.GetContentAndSubject(host + lists[i].Url)
+				EmailSender.SendEmail("1743432766@qq.com", lists[i].Name, Content)
 
-		if db_chapter<lastchapter{
-			for i:=db_chapter+1;i<=lastchapter;i++{
-				Db.UpdateLastestChapter(url)
-				Content:=WebScanner.GetContentAndSubject(host+lists[i].Url)
-				EmailSender.SendEmail("1743432766@qq.com",lists[i].Name,Content)
 			}
-		}else {
-			time.Sleep(2*time.Second)
+		} else {
+			time.Sleep(20 * time.Second)
 		}
-
 	}
+
 }
