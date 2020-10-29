@@ -44,5 +44,8 @@ func dsn(settings models.DbSettings) string {
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true&charset=utf8", settings.Username,settings.Password, settings.Hostname,settings.Dbname)
 }
 func UpdateLastestChapter(url string){
-	
+	var info models.NovelInfo
+	db.Where("url=?",url).Find(&info)
+	info.LastChapter++
+	db.Save(&info)
 }

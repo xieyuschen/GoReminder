@@ -5,7 +5,7 @@ import (
 	"GoReminder/EmailSender"
 	"GoReminder/WebScanner"
 	"GoReminder/models"
-	"fmt"
+	"time"
 )
 
 func Reminder(url string){
@@ -15,7 +15,7 @@ func Reminder(url string){
 	ch :=make(chan  map[int]models.Article,channelSize)
 	lists := make(map[int]models.Article)
 
-	for j:=0;j<1;j++{
+	for {
 		go WebScanner.ArticleUrlAndSubject(url,ch)
 		//Block for get
 		select{
@@ -24,16 +24,17 @@ func Reminder(url string){
 		db_chapter,_:=Db.GetLastChapterAndIsInit(url)
 		_,lastchapter:=WebScanner.GetNewestChapter(url,lists)
 
-		//Just for testing:)
+
 
 		if db_chapter<lastchapter{
 			for i:=db_chapter+1;i<=lastchapter;i++{
-				println(host+lists[i].Url)
+				Db.UpdateLastestChapter(url)
 				Content:=WebScanner.GetContentAndSubject(host+lists[i].Url)
 				EmailSender.SendEmail("1743432766@qq.com",lists[i].Name,Content)
 			}
 		}else {
-			fmt.Println("Helloworld")
+			time.Sleep(2*time.Second)
 		}
+
 	}
 }
