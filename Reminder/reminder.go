@@ -7,9 +7,15 @@ import (
 )
 
 func Reminder(){
-	var ch chan models.NovelInfo
+	//channelSize := 10
+	//ch的内容由Scanner获取
+	//ch :=make(map[string]models.NovelInfo,channelSize)
+	var chapter models.NovelInfo
 	for{
-		chapter:=<-ch
+		//Block for get
+		select{
+
+		}
 		db_chapter,_:=Db.GetLastChapterAndIsInit(chapter.Url)
 		if db_chapter>chapter.LastChapter{
 			EmailSender.SendEmail("1","2","3")

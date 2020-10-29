@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func GetPage(url string) (pageContent string){
+func GetPageNode(url string) (node *html.Node){
 
 	resp,err:=http.Get(url)
 	if err!=nil{
@@ -19,9 +19,13 @@ func GetPage(url string) (pageContent string){
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	defer  resp.Body.Close()
-	return string(body)
+	doc,err := html.Parse(strings.NewReader(string(body)))
+	if err!=nil{
+		log.Panic(err)
+	}
+	return doc
 }
-func HtmlParse(str string) (lists map[string]models.Article) {
+func ArticleUrlAndSubject(str string) (lists map[string]models.Article) {
 	lists =make(map[string]models.Article)
 	doc,err := html.Parse(strings.NewReader(str))
 	if err!=nil{
@@ -64,4 +68,11 @@ func GetNewestChapter(url string, lists map[string]models.Article) (u string,las
 	}
 	return url,lastchapter
 }
+func GetContentAndSubject(url string) (content string){
+	node := GetPageNode(url)
+	t:=getElementById(node,"content")
+	text := &bytes.Buffer{}
+	collectText(t, text)
 
+	return fmt.Sprintf("%s",text)
+}
