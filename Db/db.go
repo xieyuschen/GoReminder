@@ -9,7 +9,6 @@ import (
 	"log"
 )
 var db *gorm.DB
-var novelInfo models.NovelInfo
 func init(){
 	settings := models.DbSettings{Username: "root", Password: "root", Hostname: "127.0.0.1:3306", Dbname: "goreminder"}
 	//"root:@tcp(127.0.0.1:3306)/?parseTime=true&charset=utf8"
@@ -22,6 +21,7 @@ func init(){
 	msdb.Close()
 
 	db, _ = gorm.Open("mysql",dsn(settings))
+	var novelInfo models.NovelInfo
 	if !db.HasTable(&novelInfo){
 		db.CreateTable(&novelInfo)
 	}
