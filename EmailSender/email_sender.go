@@ -32,11 +32,6 @@ func SendEmail(toEmail string,subject string,content string){
 	}
 
 
-
-	//===================================
-	//Send a email template
-
-
 	//------------------------------------
 	body := content
 	// Setup headers

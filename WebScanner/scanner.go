@@ -11,10 +11,10 @@ func ArticleUrlAndSubject(str string,Articles chan map[int]models.Article) {
 
 	doc := getPageNode(str)
 	r1:=getElementById(doc,"list")
-	fmt.Println(r1)
-	var lists map[int]models.Article
-	var f func(*html.Node)
-	f = func(n *html.Node) {
+
+	lists := make( map[int]models.Article)
+	var f func(*html.Node,*map[int]models.Article)
+	f = func(n *html.Node,list *map[int]models.Article) {
 		var key string
 		if n.Type == html.ElementNode && n.Data == "a" {
 			for _, a := range n.Attr {
@@ -32,11 +32,11 @@ func ArticleUrlAndSubject(str string,Articles chan map[int]models.Article) {
 			lists[chapter]=models.Article{Chapter: chapter,Name: name,Url: key}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			f(c)
+			f(c,list)
 		}
 	}
 
-	f(r1)
+	f(r1,&lists)
 	Articles<-lists
 }
 func GetNewestChapter(Url string, lists map[int]models.Article) (url string,lastchapter int){
