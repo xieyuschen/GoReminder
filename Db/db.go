@@ -4,16 +4,20 @@ import (
 	"GoReminder/models"
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+	"log"
 )
 var db *gorm.DB
 var novelInfo models.NovelInfo
 func init(){
-	settings := models.DbSettings{Username: "root", Password: "root", Hostname: "127.0.0.1:3306", Dbname: "husthole"}
+	settings := models.DbSettings{Username: "root", Password: "root", Hostname: "127.0.0.1:3306", Dbname: "goreminder"}
 	//"root:@tcp(127.0.0.1:3306)/?parseTime=true&charset=utf8"
 	connStr := dsn(settings)
-	msdb, _ := sql.Open("mysql",connStr)
-
+	msdb, err := sql.Open("mysql",connStr)
+	if err!=nil{
+		log.Panic(err)
+	}
 	msdb.Exec("create database if not exists "+settings.Dbname +" character set utf8")
 	msdb.Close()
 

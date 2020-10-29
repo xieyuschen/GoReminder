@@ -39,13 +39,13 @@ func ArticleUrlAndSubject(str string,Articles chan map[int]models.Article) {
 	f(r1)
 	Articles<-lists
 }
-func GetNewestChapter(url string, lists map[string]models.Article) (u string,lastchapter int){
-	for _,value:=range lists{
+func GetNewestChapter(Url string, lists map[int]models.Article) (url string,lastchapter int){
+	for key,value:=range lists{
 		if value.Chapter>lastchapter{
-			lastchapter=value.Chapter
+			lastchapter=key
 		}
 	}
-	return url,lastchapter
+	return Url,lastchapter
 }
 func GetContentAndSubject(url string) (content string){
 	node := getPageNode(url)

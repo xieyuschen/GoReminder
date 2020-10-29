@@ -32,7 +32,6 @@ var SubJectChan chan string
 
 
 func init(){
-
 	conf := ReadSettingsFromFile("Config.json")
 	account =conf.EmailSenderSettings.Email
 	password = conf.EmailSenderSettings.Password
