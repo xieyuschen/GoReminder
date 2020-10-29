@@ -5,35 +5,14 @@ import (
 	"bytes"
 	"fmt"
 	"golang.org/x/net/html"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"strings"
 )
 
-func GetPageNode(url string) (node *html.Node){
+func ArticleUrlAndSubject(str string,Articles chan map[int]models.Article) {
 
-	resp,err:=http.Get(url)
-	if err!=nil{
-		log.Panic(err)
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	defer  resp.Body.Close()
-	doc,err := html.Parse(strings.NewReader(string(body)))
-	if err!=nil{
-		log.Panic(err)
-	}
-	return doc
-}
-func ArticleUrlAndSubject(str string) (lists map[string]models.Article) {
-	lists =make(map[string]models.Article)
-	doc,err := html.Parse(strings.NewReader(str))
-	if err!=nil{
-		log.Panic(err)
-	}
+	doc := getPageNode(str)
 	r1:=getElementById(doc,"list")
-	//fmt.Println(r1)
-
+	fmt.Println(r1)
+	var lists map[int]models.Article
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		var key string
@@ -50,15 +29,15 @@ func ArticleUrlAndSubject(str string) (lists map[string]models.Article) {
 			collectText(n, text)
 
 			chapter,name:=splitNameAndChapter(fmt.Sprintf("%s",text))
-			lists[key]=models.Article{Chapter: chapter,Name: name}
+			lists[chapter]=models.Article{Chapter: chapter,Name: name,Url: key}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)
 		}
 	}
-	f(r1)
 
-	return lists
+	f(r1)
+	Articles<-lists
 }
 func GetNewestChapter(url string, lists map[string]models.Article) (u string,lastchapter int){
 	for _,value:=range lists{
@@ -69,7 +48,7 @@ func GetNewestChapter(url string, lists map[string]models.Article) (u string,las
 	return url,lastchapter
 }
 func GetContentAndSubject(url string) (content string){
-	node := GetPageNode(url)
+	node := getPageNode(url)
 	t:=getElementById(node,"content")
 	text := &bytes.Buffer{}
 	collectText(t, text)

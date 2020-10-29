@@ -3,6 +3,9 @@ package WebScanner
 import (
 	"bytes"
 	"golang.org/x/net/html"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"strconv"
 	"strings"
 )
@@ -17,7 +20,7 @@ func collectText(n *html.Node, buf *bytes.Buffer) {
 }
 
 //========================================
-func GetAttribute(n *html.Node, key string) (string, bool) {
+func getAttribute(n *html.Node, key string) (string, bool) {
 	for _, attr := range n.Attr {
 		if attr.Key == key {
 			return attr.Val, true
@@ -28,7 +31,7 @@ func GetAttribute(n *html.Node, key string) (string, bool) {
 
 func checkId(n *html.Node, id string) bool {
 	if n.Type == html.ElementNode {
-		s, ok := GetAttribute(n, "id")
+		s, ok := getAttribute(n, "id")
 		if ok && s == id {
 			return true
 		}
@@ -69,4 +72,18 @@ func splitNameAndChapter(combineStr string) (num int, name string) {
 		}
 		return num, re[1]
 	}
+}
+func getPageNode(url string) (node *html.Node){
+
+	resp,err:=http.Get(url)
+	if err!=nil{
+		log.Panic(err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	defer  resp.Body.Close()
+	doc,err := html.Parse(strings.NewReader(string(body)))
+	if err!=nil {
+		log.Panic(err)
+	}
+		return doc
 }

@@ -4,4 +4,5 @@ type Article struct {
 	Content string
 	Name string
 	Chapter int
+	Url string
 }
