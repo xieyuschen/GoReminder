@@ -29,13 +29,13 @@ func Reminder(url string){
 	Db.InsertArticle(info)
 	fmt.Println("Restart service and Send the newest chapter to you:)")
 
-	for {
+	for i:=0;;i++{
 		go WebScanner.ArticleUrlAndSubject(url, ch)
 		//Block for get
 		select {
 			case lists = <-ch:
 		}
-
+		println("This is ",i,"turn at ",time.Now().String())
 		if db_chapter, _ := Db.GetLastChapterAndIsInit(url); db_chapter < lastchapter {
 			for i := db_chapter + 1; i <= lastchapter; i++ {
 				Db.UpdateLastestChapter(url, i)
