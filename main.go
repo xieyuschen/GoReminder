@@ -17,7 +17,6 @@ func try()  {
 	for{
 		defer Recover()
 		DoPanic()
-
 	}
 }
 func main(){

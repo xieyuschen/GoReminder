@@ -83,7 +83,7 @@ func ReadSettingsFromFile(settingFilePath string) (config models.Config){
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	err = json.Unmarshal(byteValue, &config)
 	if err != nil {
-		util.Appendlog("Invalid Config string"+time.Now().String())
+		util.Appendlog("HttpParserError helper:83 "+time.Now().String())
 	}
 	return config
 }
