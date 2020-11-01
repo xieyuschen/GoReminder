@@ -26,6 +26,7 @@ func Reminder(url string){
 	select {
 		case lists = <-ch:
 	}
+	_, lastchapter := WebScanner.GetNewestChapter(url, lists)
 
 	fmt.Println(lastchapter)
 	info := models.NovelInfo{Url: url, LastChapter: lastchapter - 1, IsInit: true}
