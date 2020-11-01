@@ -8,8 +8,11 @@ import (
 	"fmt"
 	"time"
 )
+var maps map[string]models.ArticleDetail
 
 func Reminder(url string){
+
+	maps[url] = models.ArticleDetail{IsInit: true}
 	host:="http://www.biquge.se"
 	channelSize := 10
 	//ch的内容由Scanner获取
@@ -23,7 +26,7 @@ func Reminder(url string){
 	select {
 		case lists = <-ch:
 	}
-	_, lastchapter := WebScanner.GetNewestChapter(url, lists)
+
 	fmt.Println(lastchapter)
 	info := models.NovelInfo{Url: url, LastChapter: lastchapter - 1, IsInit: true}
 	Db.InsertArticle(info)
@@ -35,6 +38,7 @@ func Reminder(url string){
 		select {
 			case lists = <-ch:
 		}
+		_, lastchapter := WebScanner.GetNewestChapter(url, lists)
 		println("This is ",i,"turn at ",time.Now().String())
 		if db_chapter, _ := Db.GetLastChapterAndIsInit(url); db_chapter < lastchapter {
 			for i := db_chapter + 1; i <= lastchapter; i++ {

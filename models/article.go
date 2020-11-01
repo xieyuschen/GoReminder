@@ -6,3 +6,8 @@ type Article struct {
 	Chapter int
 	Url string
 }
+
+type ArticleDetail struct{
+	LastestChapter string
+	IsInit bool
+}
