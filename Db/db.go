@@ -14,7 +14,14 @@ func GetLastChapterAndIsInit(url string)(LastChapter int,IsInit bool){
 	return info.LastChapter,info.IsInit
 }
 func InsertArticle(info models.NovelInfo){
-	db.Create(&info)
+	var temp models.NovelInfo
+	db.Where("url = ?",info.Url).Find(&temp)
+	if temp.Url==""{
+		db.Create(&info)
+	}else {
+		temp.LastChapter = info.LastChapter
+		db.Save(&temp)
+	}
 }
 func dsn(settings models.DbSettings) string {
 	// https://stackoverflow.com/questions/45040319/unsupported-scan-storing-driver-value-type-uint8-into-type-time-time

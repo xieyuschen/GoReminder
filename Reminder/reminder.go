@@ -8,11 +8,8 @@ import (
 	"fmt"
 	"time"
 )
-var maps map[string]models.ArticleDetail
 
 func Reminder(url string){
-
-	maps[url] = models.ArticleDetail{IsInit: true}
 	host:="http://www.biquge.se"
 	channelSize := 10
 	//ch的内容由Scanner获取
