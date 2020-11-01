@@ -1,11 +1,13 @@
 package EmailSender
 
 import (
+	"GoReminder/util"
 	"bytes"
 	"fmt"
 	"log"
 	"net/mail"
 	"html/template"
+	"time"
 )
 func parseTemplate(fileName string, data interface{}) error {
 	t, err := template.ParseFiles(fileName)
@@ -24,7 +26,7 @@ func SendEmail(toEmail string,subject string,content string){
 	to   := mail.Address{"DearUser", toEmail}
 	var err error
 	if err = client.Mail(from.Address); err != nil {
-		log.Panic(err)
+		util.Appendlog("email_sender,Invaild from email address"+time.Now().String())
 	}
 	if err = client.Rcpt(to.Address); err != nil {
 		log.Panic(err)
@@ -51,16 +53,16 @@ func SendEmail(toEmail string,subject string,content string){
 
 	w, err := client.Data()
 	if err != nil {
-		log.Panic(err)
+		util.Appendlog("Email56 "+time.Now().String())
 	}
 	_, err = w.Write([]byte(message))
 
 	if err != nil {
-		log.Panic(err)
+		util.Appendlog("Email61 "+time.Now().String())
 	}
 	err = w.Close()
 	if err != nil {
-		log.Panic(err)
+		util.Appendlog("Email65 "+time.Now().String())
 	}
 	//client.Quit()
 }

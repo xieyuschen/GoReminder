@@ -2,13 +2,14 @@ package EmailSender
 
 import (
 	"GoReminder/models"
+	"GoReminder/util"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
 	"os"
+	"time"
 
 	"net/smtp"
 )
@@ -82,7 +83,7 @@ func ReadSettingsFromFile(settingFilePath string) (config models.Config){
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	err = json.Unmarshal(byteValue, &config)
 	if err != nil {
-		log.Panic(err)
+		util.Appendlog("Invalid Config string"+time.Now().String())
 	}
 	return config
 }

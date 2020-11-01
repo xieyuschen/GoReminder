@@ -1,13 +1,14 @@
 package WebScanner
 
 import (
+	"GoReminder/util"
 	"bytes"
 	"golang.org/x/net/html"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func collectText(n *html.Node, buf *bytes.Buffer) {
@@ -77,13 +78,13 @@ func getPageNode(url string) (node *html.Node){
 
 	resp,err:=http.Get(url)
 	if err!=nil{
-		log.Panic(err)
+		util.Appendlog(" HttpGetError helper:82"+time.Now().String())
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	defer  resp.Body.Close()
 	doc,err := html.Parse(strings.NewReader(string(body)))
 	if err!=nil {
-		log.Panic(err)
+		util.Appendlog("HttpParserError helper:83 "+time.Now().String())
 	}
 		return doc
 }
