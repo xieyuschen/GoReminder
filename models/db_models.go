@@ -1,7 +1,5 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 type DbSettings struct{
 	Username string `json:"Username"`
 	Password string	`json:"Password"`
@@ -9,8 +7,7 @@ type DbSettings struct{
 	Dbname   string `json:"Dbname"`
 }
 type NovelInfo struct {
-	gorm.Model
-	Url string
+	Url string  `gorm:"primary_key"`
 	LastChapter int
 	IsInit bool
 }
