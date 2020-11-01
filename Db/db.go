@@ -2,29 +2,12 @@ package Db
 
 import (
 	"GoReminder/models"
-	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"log"
 )
 var db *gorm.DB
-func init(){
-	//"root:@tcp(127.0.0.1:3306)/?parseTime=true&charset=utf8"
-	connStr := dsn(DbSetting)
-	msdb, err := sql.Open("mysql",connStr)
-	if err!=nil{
-		log.Panic(err)
-	}
-	msdb.Exec("create database if not exists "+DbSetting.Dbname +" character set utf8")
-	msdb.Close()
 
-	db, _ = gorm.Open("mysql",dsn(DbSetting))
-	var novelInfo models.NovelInfo
-	if !db.HasTable(&novelInfo){
-		db.CreateTable(&novelInfo)
-	}
-}
 func GetLastChapterAndIsInit(url string)(LastChapter int,IsInit bool){
 	var info models.NovelInfo
 	db.Where("url=?",url).Find(&info)
