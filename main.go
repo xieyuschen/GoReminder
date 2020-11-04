@@ -8,18 +8,16 @@ import (
 func main(){
 	url :="http://www.biquge.se/23609/"//77693356.html"
 	Reminder.Reminder(url)
-
 }
-func toy(){
-	Mock()
+func Toy(){
+	mock()
 	log.Println("AfterMath")
 }
-func Mock(){
+func mock(){
 	defer func() {
-		if err:=recover();err==nil{
-			log.Panic("Panic Again",err)
+		if err:=recover();err!=nil{
+			log.Println("Recover Succesfully")
 		}
-		log.Println("Recover Succesfully")
 	}()
 	log.Panic("Panic!")
 
