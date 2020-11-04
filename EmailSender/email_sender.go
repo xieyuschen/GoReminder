@@ -22,6 +22,12 @@ func parseTemplate(fileName string, data interface{}) error {
 	return nil
 }
 func SendEmail(toEmail string,subject string,content string){
+	defer func(){
+		if err:=recover();err==nil{
+			log.Panic(err)
+		}
+		fmt.Println("Error encountered at email sender and has been recovered")
+	}()
 	from := mail.Address{"GoReminder", account}
 	to   := mail.Address{"DearUser", toEmail}
 	var err error
