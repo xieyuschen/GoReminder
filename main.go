@@ -1,13 +1,14 @@
 package main
 
 import (
+	"GoReminder/Reminder"
 	"log"
 )
 
 func main(){
-	//url :="http://www.biquge.se/23609/"//77693356.html"
-	//Reminder.Reminder(url)
-	toy()
+	url :="http://www.biquge.se/23609/"//77693356.html"
+	Reminder.Reminder(url)
+
 }
 func toy(){
 	Mock()
