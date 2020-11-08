@@ -36,6 +36,9 @@ func Reminder(url string){
 		select {
 			case lists = <-ch:
 		}
+		if lists==nil{
+			continue
+		}
 		_, lastchapter := WebScanner.GetNewestChapter(url, lists)
 		println("This is ",i,"turn at ",time.Now().String())
 		if db_chapter, _ := Db.GetLastChapterAndIsInit(url); db_chapter < lastchapter {

@@ -3,6 +3,7 @@ package WebScanner
 import (
 	"GoReminder/util"
 	"bytes"
+	"errors"
 	"golang.org/x/net/html"
 	"io/ioutil"
 	"net/http"
@@ -74,8 +75,13 @@ func splitNameAndChapter(combineStr string) (num int, name string) {
 		return num, re[1]
 	}
 }
-func getPageNode(url string) (node *html.Node){
-
+func getPageNode(url string) (node *html.Node,err error){
+	defer func() {
+		if e:=recover();e!=nil{
+			node=nil
+			err=errors.New("GetMethod failed")
+		}
+	}()
 	resp,err:=http.Get(url)
 	if err!=nil{
 		util.Appendlog(" HttpGetError helper:82"+time.Now().String())
@@ -86,5 +92,5 @@ func getPageNode(url string) (node *html.Node){
 	if err!=nil {
 		util.Appendlog("HttpParserError helper:83 "+time.Now().String())
 	}
-		return doc
+		return doc,nil
 }

@@ -20,5 +20,4 @@ func mock(){
 		}
 	}()
 	log.Panic("Panic!")
-
 }
